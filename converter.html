@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f7faff;
+        }
+        .converter-container {
+            width: 300px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        .converter-container h1 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .converter-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+        .converter-container input, .converter-container select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .converter-container input.error {
+            border-color: red;
+        }
+        .converter-container button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .converter-container button:hover {
+            background: #0056b3;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: -15px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="converter-container">
+    <h1>Temperature Converter</h1>
+
+    <label for="degrees">Degrees</label>
+    <input type="number" id="degrees" placeholder="Enter temperature">
+    <div id="error-message" class="error-message" style="display: none;">Please enter a valid number.</div>
+
+    <label for="type">Type</label>
+    <select id="type">
+        <option value="fahrenheit">Fahrenheit</option>
+        <option value="celsius">Celsius</option>
+    </select>
+
+    <label for="precision">Precision</label>
+    <input type="number" id="precision" placeholder="Decimal places (e.g., 2)">
+
+    <label for="result">Result</label>
+    <input type="text" id="result" placeholder="Converted temperature" readonly>
+
+    <button onclick="convertTemperature()">Convert</button>
+</div>
+
+<script>
+    const elements = {
+        resultField: document.getElementById('result'),
+        degreesInput: document.getElementById('degrees'),
+        typeField: document.getElementById('type'),
+        precisionInput: document.getElementById('precision'),
+        errorMessage: document.getElementById('error-message')
+    };
+
+    function fahrenheitToCelsius(degrees) {
+        return (degrees - 32) * 5 / 9;
+    }
+
+    function celsiusToFahrenheit(degrees) {
+        return (degrees * 9 / 5) + 32;
+    }
+
+    function convertTemperature() {
+        const degrees = parseFloat(elements.degreesInput.value);
+
+        if (isNaN(degrees)) {
+            elements.errorMessage.style.display = 'block';
+            elements.degreesInput.classList.add('error');
+            elements.resultField.value = '';
+            return;
+        } else {
+            elements.errorMessage.style.display = 'none';
+            elements.degreesInput.classList.remove('error');
+        }
+
+        let precision = parseInt(elements.precisionInput.value);
+        if (isNaN(precision) || precision < 0) {
+            precision = 4; // Default precision
+        }
+
+        let result;
+        if (elements.typeField.value === 'fahrenheit') {
+            result = fahrenheitToCelsius(degrees);
+        } else {
+            result = celsiusToFahrenheit(degrees);
+        }
+
+        elements.resultField.value = result.toFixed(precision) + (elements.typeField.value === 'fahrenheit' ? ' °C' : ' °F');
+    }
+</script>
+
+</body>
+</html>
